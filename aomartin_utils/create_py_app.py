@@ -109,11 +109,12 @@ if __name__ == "__main__":
     )
 """
 
+
 def create_py_app(directory, project_name=None):
 
     if project_name is None:
 
-        project_name = directory.name.casefold().replace("-","_")
+        project_name = directory.name.casefold().replace("-", "_")
 
     project_dir = directory / project_name
 
@@ -125,29 +126,30 @@ def create_py_app(directory, project_name=None):
 
     project_dir.mkdir()
 
-    venv_dir_path = directory / 'venv'
+    venv_dir_path = directory / "venv"
 
     log.info("making venv at %s.", venv_dir_path)
 
-    subprocess.run(['python3', '-m', 'venv', '--prompt', directory.name, venv_dir_path])
+    subprocess.run(["python3", "-m", "venv", "--prompt", directory.name, venv_dir_path])
 
     log.info("setting up pip a bit")
 
-    pip_path = venv_dir_path / 'bin' / 'pip'
+    pip_path = venv_dir_path / "bin" / "pip"
 
-    subprocess.run([pip_path, 'install', 'pip', 'wheel', 'ptpython', '--upgrade'])
+    subprocess.run([pip_path, "install", "pip", "wheel", "ptpython", "--upgrade"])
 
-    activate_file_path = (directory / 'activate')
+    activate_file_path = directory / "activate"
 
-    with activate_file_path.open('w') as f:
+    with activate_file_path.open("w") as f:
 
-        f.write("""\
+        f.write(
+            """\
 #! /bin/echo Run like this ". activate" Error message from:
 source venv/bin/activate
 """
         )
 
-    for dir_name in ['gen','res','doc']:
+    for dir_name in ["gen", "res", "doc"]:
 
         gen_dir = directory / dir_name
 
@@ -155,27 +157,27 @@ source venv/bin/activate
 
         gen_dir.mkdir()
 
-        with (gen_dir / '.gitignore').open('w') as f:
+        with (gen_dir / ".gitignore").open("w") as f:
 
             f.write("#*\n!gitignore\n")
 
     log.info("initialising git")
 
-    subprocess.run(["git","init"], cwd=directory)
+    subprocess.run(["git", "init"], cwd=directory)
 
-    gitignore_path = directory / '.gitignore'
+    gitignore_path = directory / ".gitignore"
 
     log.info("writing .gitignore to %s", gitignore_path)
 
-    with gitignore_path.open('w') as f:
+    with gitignore_path.open("w") as f:
 
         f.write(f"venv\n{project_name}.egg-info\n")
 
-    manifest_path = directory / 'MANIFEST.in'
+    manifest_path = directory / "MANIFEST.in"
 
     log.info("writing manifest to %s", manifest_path)
 
-    with manifest_path.open('w') as f:
+    with manifest_path.open("w") as f:
 
         f.write(f"include {project_name}/{directory.name}.conf\n")
 
@@ -183,55 +185,58 @@ source venv/bin/activate
 
     log.info("writing root README to %s", readme_path)
 
-    with readme_path.open('w') as f:
+    with readme_path.open("w") as f:
 
         f.write(f"# {directory.name} project\n\n- [doc](./doc/)\n- [res](./res/)")
 
-    repl_exec_path = directory / 'repl'
+    repl_exec_path = directory / "repl"
 
     log.info("writing repl executable to %s", repl_exec_path)
 
-    with repl_exec_path.open('w') as f:
+    with repl_exec_path.open("w") as f:
 
         f.write("#!/bin/sh\n./venv/bin/ptpython -i repl.py\n")
 
     repl_exec_path.chmod(0o755)
 
-    repl_py_path = directory / 'repl.py'
+    repl_py_path = directory / "repl.py"
 
     log.info("writing repl.py to %s", repl_py_path)
 
-    with repl_py_path.open('w') as f:
+    with repl_py_path.open("w") as f:
 
         f.write(repl_py_template.format(project_name=project_name))
 
-    config_py_path = project_dir / 'config.py'
+    config_py_path = project_dir / "config.py"
 
     log.info("writing config.py to %s", config_py_path)
 
-    with config_py_path.open('w') as f:
+    with config_py_path.open("w") as f:
 
         f.write(config_py_template.format(project_name=project_name))
 
-    config_file_path = directory / project_name / f'{directory.name}.conf'
+    config_file_path = directory / project_name / f"{directory.name}.conf"
 
     log.info("writing config file to %s", config_file_path)
 
-    with config_file_path.open('w') as f:
+    with config_file_path.open("w") as f:
 
         f.write(config_file_template)
 
     log.info("Adding everything to initial git")
 
-    setup_py_path = directory / 'setup.py'
+    setup_py_path = directory / "setup.py"
 
-    with setup_py_path.open('w') as f:
+    with setup_py_path.open("w") as f:
 
         f.write(setup_py_template.format(project_name=project_name))
 
-    subprocess.run(["git","add", "--verbose", "."], cwd=directory)
+    subprocess.run(["git", "add", "--verbose", "."], cwd=directory)
 
-    subprocess.run(["git","commit", "--message", "initialised with create-python-app"], cwd=directory)
+    subprocess.run(
+        ["git", "commit", "--message", "initialised with create-python-app"],
+        cwd=directory,
+    )
 
 
 def create_py_app_main():
@@ -245,9 +250,9 @@ def create_py_app_main():
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('dir', type=non_existant_path)
+    parser.add_argument("dir", type=non_existant_path)
 
-    parser.add_argument('project_name', nargs='?', default=None, type=str)
+    parser.add_argument("project_name", nargs="?", default=None, type=str)
 
     args = parser.parse_args()
 
