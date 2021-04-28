@@ -5,6 +5,8 @@ import logging
 import os
 import re
 import json
+import shutil
+import itertools
 
 def split_on_empty_lines(s):
 
@@ -29,13 +31,43 @@ def existant_file(s):
 
     return path
 
+def nuke_dir(path):
+
+    try:
+
+        shutil.rmtree(path)
+
+    except FileNotFoundError as error:
+
+        pass
+
+def is_directory(path):
+
+    return path.is_dir()
+
+def recurse_directory(root_path):
+
+    grouper = itertools.groupby(sorted(pathlib.Path(root_path).iterdir(), key=is_directory), key=is_directory)
+
+    for items_are_directories, group in grouper:
+
+        for item in group:
+
+            if items_are_directories:
+
+                yield from recurse_directory(item)
+
+            else:
+
+                yield item
+
 def non_existant_path(s):
 
     path = pathlib.Path(s)
 
     if path.exists():
     
-        raise argparse.ArgumentTypeError(f"Can't create a project in an existing directory: {path}")
+        raise argparse.ArgumentTypeError(f"Path {path} must not yet exist.")
         
     return path
 

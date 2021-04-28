@@ -79,9 +79,18 @@ import collections, datetime, functools, itertools
 import json, logging, pathlib, random, re
 from importlib import reload
 import {project_name}.config
-#import pandas as pd
-#import numpy as np
-#import plotnine as p9
+try:
+    import pandas as pd
+except ModuleNotFoundError:
+    pass
+try:
+    import numpy as np
+except ModuleNotFoundError:
+    pass
+try:
+    import plotnine as p9
+except ModuleNotFoundError:
+    pass
 
 log = logging.getLogger(__name__)
 log.silent = functools.partial(log.log, 0)
@@ -160,7 +169,7 @@ source venv/bin/activate
 
     with gitignore_path.open('w') as f:
 
-        f.write("venv\n")
+        f.write(f"venv\n{project_name}.egg-info\n")
 
     manifest_path = directory / 'MANIFEST.in'
 
