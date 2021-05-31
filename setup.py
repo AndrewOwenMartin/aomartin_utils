@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="aomartin_utils",
-    version="0.2.7",
+    version="0.3.0",
     packages=[
         "aomartin_utils",
     ],
@@ -13,9 +13,12 @@ setup(
             "my-latexmk = aomartin_utils.utils:my_latexmk_main",
             "create-python-app = aomartin_utils.create_py_app:create_py_app_main",
             "csv2sqlite = aomartin_utils.csv2sqlite:csv2sqlite_main",
+            "frobnicate-spreadsheet = aomartin_utils.frobnicate:frobnicate_main",
         ],
     },
     install_requires=[
+        "openpyxl",
+        "pandas",
     ],
     dependencies=[
         "latexmk", # for my-latexmk
