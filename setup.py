@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="aomartin_utils",
-    version="0.3.0",
+    version="0.4.0",
     packages=[
         "aomartin_utils",
     ],
@@ -21,7 +21,7 @@ setup(
         "pandas",
     ],
     dependencies=[
-        "latexmk", # for my-latexmk
+        "latexmk",  # for my-latexmk
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
