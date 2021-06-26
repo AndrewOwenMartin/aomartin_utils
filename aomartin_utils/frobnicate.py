@@ -81,7 +81,7 @@ def count_type(column, checker, truthy_count):
 
     count = sum(checker(x) for x in column)
 
-    proportion = count / truthy_count
+    proportion = (count / truthy_count) if truthy_count else None
 
     return dict(count=count, proportion=proportion)
 
